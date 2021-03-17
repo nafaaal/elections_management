@@ -75,6 +75,31 @@ public class Elections {
             rs = stmt.executeQuery(sql);
             return rs.getInt("has_voted");
         } catch (SQLException e) {
+            return -1;
+//            System.out.println(e.toString());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                return -1;
+//                System.out.println(e.toString());
+            }
+
+        }
+//        return -1;
+    }
+
+    public static String vote(String id_card, int vote) {
+        if (has_voted(id_card) == 1) return "Already voted";
+        if (has_voted(id_card) == -1) return "Person not registered to vote";
+        PreparedStatement ps = null;
+        Connection con = DbConnection.connect();
+        try {
+            String sql = "UPDATE voters_list SET has_voted=1, voted_for="+vote+" WHERE id_no='"+id_card+"'";
+            ps = con.prepareStatement(sql);
+            ps.execute();
+            return "Successfully Voted.";
+        } catch (SQLException e) {
             System.out.println(e.toString());
         } finally {
             try {
@@ -84,8 +109,9 @@ public class Elections {
             }
 
         }
-        return -1;
+    return "Error";
     }
+
 
     public static void statistics() {
         Connection con = DbConnection.connect();
