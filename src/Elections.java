@@ -3,13 +3,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 //NEED TO GET CANDIDATES
 //NEED TO SHOW CANDIDATES CORRECTLY
+//SOUT LISTS CORRECTLY SPACED
+//MAKE SURE NO ONE CAN BAATHIL VOTE
 
 public class Elections {
 
-    public static void insert(String name, String island, String address, String id_no, int has_voted, int voted_for) {
+    public static void insert(String name, String island, String address, String id_no) {
         Connection con = DbConnection.connect();
         PreparedStatement ps = null;
         try {
@@ -19,8 +22,8 @@ public class Elections {
             ps.setString(2, island);
             ps.setString(3, address);
             ps.setString(4, id_no);
-            ps.setInt(5, has_voted);
-            ps.setInt(6, voted_for);
+            ps.setInt(5, 0);
+            ps.setInt(6, 0);
             ps.execute();
             System.out.println("Data has been inserted!");
         } catch (SQLException e) {
@@ -36,15 +39,45 @@ public class Elections {
         }
     }
 
-    public static void query(String sql) {
+    public static void candidates_list() {
         Connection con = DbConnection.connect();
-        PreparedStatement ps = null;
         ResultSet rs  =  null;
         try {
             Statement stmt  = con.createStatement();
+            String sql = "SELECT * FROM candidate_list";
             rs = stmt.executeQuery(sql);
+            System.out.println("CANDIDATES LIST : ");
             while (rs.next()) {
-                System.out.println(rs.getInt("id") +  "\t" +
+                System.out.println(
+                        rs.getString("name") + "\t" +
+                        rs.getString("island")+ "\t" +
+                        rs.getString("address")+ "\t" +
+                        rs.getInt("candidate_number")+ "\t" +
+                        rs.getString("party"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        } finally {
+            try {
+                rs.close();
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+
+        }
+    }
+
+    public static void voter_list() {
+        Connection con = DbConnection.connect();
+        ResultSet rs  =  null;
+        try {
+            Statement stmt  = con.createStatement();
+            String sql = "SELECT * FROM voters_list";
+            rs = stmt.executeQuery(sql);
+            System.out.println("VOTERS LIST : ");
+            while (rs.next()) {
+                System.out.println(
                         rs.getString("name") + "\t" +
                         rs.getString("island")+ "\t" +
                         rs.getString("address")+ "\t" +
@@ -64,6 +97,32 @@ public class Elections {
 
         }
     }
+
+    public static ArrayList<Integer> candidate_numbers(){
+        ArrayList<Integer> candidates = new ArrayList<Integer>();
+        ResultSet rs  =  null;
+        Connection con = DbConnection.connect();
+        try {
+            String sql = "SELECT DISTINCT candidate_number FROM candidate_list;";
+            Statement stmt  = con.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                candidates.add(rs.getInt("candidate_number"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+
+        }
+        return candidates;
+    }
+
 
 
     public static int eligible_check(String id_card) {
@@ -117,6 +176,7 @@ public class Elections {
         try {
             Statement stmt  = con.createStatement();
             //IDEALLY GET COUNT FROM DB
+            System.out.println("VOTING RESULTS: ");
             for (int i=0; i<4; i++){
                 String sql = "SELECT COUNT(voted_for) as vote FROM voters_list WHERE voted_for="+i;
                 rs = stmt.executeQuery(sql);

@@ -3,13 +3,55 @@ import java.util.Scanner;
 
 public class Main {
 
+    public static void enter_voter(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter island: ");
+        String island = scanner.nextLine();
+        System.out.print("Enter address: ");
+        String address = scanner.nextLine();
+        System.out.print("Enter ID number: ");
+        String id_number = scanner.nextLine();
+        Elections.insert(name, island, address, id_number);
+    }
+
     public static void admin() {
-        System.out.println("admin");
+        while (true) {
+            int process;
+            System.out.println("\n-1. Exit");
+            System.out.println("1. Print Candidates");
+            System.out.println("2. Print Voters");
+            System.out.println("3. Add Voter to list");
+            System.out.println("4. View election result.");
+            System.out.print("Enter process number: ");
+            Scanner scanner = new Scanner(System.in);
+            try {
+                process = scanner.nextInt();
+                System.out.print("\n");
+                if (process == -1) break;
+            } catch (Exception e) {
+                System.out.println("Enter Valid number");
+                break;
+            }
+            if (process == 1) {
+                Elections.candidates_list();
+            } else if (process == 2) {
+                Elections.voter_list();
+            } else if (process == 3){
+                enter_voter();
+            } else if (process == 4){
+                Elections.statistics();
+            } else {
+                System.out.println("Enter valid process");
+            }
+        }
     }
 
     public static String voting() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter ID Card number");
+        ArrayList<Integer> candidates = Elections.candidate_numbers();
+        System.out.print("Enter ID Card number: ");
         String id_card = scanner.nextLine();
         if (Elections.eligible_check(id_card) == -1) {
             return "Not registered";
@@ -17,27 +59,28 @@ public class Main {
             return "Already voted.";
          } else {
             // PRINT CANDIDATES
-            System.out.println("Enter Vote: ");
+            System.out.print("Enter Vote: ");
             int vote = scanner.nextInt();
-            return Elections.vote(id_card, vote);
+
+            if (candidates.contains(vote)) return Elections.vote(id_card, vote);
+            else return "Candidate not valid. Please try again.";
         }
     }
 
     public static void main(String[] args) {
-//        insert("Ibrahim Rushdhee", "Lh.Hinnavaru", "Teerumage", "A483252", 0, 0);
-//        Elections.query("SELECT * FROM voters_list");
-//        System.out.println(Elections.has_voted("A22761"));
-//        Elections.statistics();
 
-        System.out.println("WELCOME TO VOTING HEHEHEHE");
+        System.out.println("WELCOME TO VOTING 2021");
+        System.out.println("=======================");
         Scanner scanner = new Scanner(System.in);
         int process;
         while (true) {
+            System.out.println("\n-1. Exit");
             System.out.println("1. Elections Admin");
             System.out.println("2. Voting");
-            System.out.println("Enter process number: ");
+            System.out.print("Enter process number: ");
             try {
                 process = scanner.nextInt();
+                System.out.print("\n");
                 if (process == -1) break;
             } catch (Exception e) {
                 System.out.println("Enter Valid number");
@@ -50,10 +93,8 @@ public class Main {
             } else {
                 System.out.println("Enter valid process");
             }
-//
-//        }
         }
         scanner.close();
-
+//
     }
 }
