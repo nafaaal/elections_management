@@ -87,21 +87,23 @@ public class Elections {
         return -1;
     }
 
-    public static ArrayList<int[]> statistics() {
-        ArrayList<int[]> votes = new ArrayList<int[]>();
+    public static void statistics() {
         Connection con = DbConnection.connect();
         ResultSet rs  =  null;
         try {
             Statement stmt  = con.createStatement();
-            String sql = "SELECT voted_for, COUNT(*) AS `num` FROM voters_list GROUP BY voted_for";
-            rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                int[] tempArray = new int[2];
-                tempArray[0] = rs.getInt("voted_for");
-                tempArray[1] = rs.getInt("num");
-                votes.add(tempArray);
+            for (int i=0; i<4; i++){
+                String sql = "SELECT COUNT(voted_for) as vote FROM voters_list WHERE voted_for="+i;
+                rs = stmt.executeQuery(sql);
+                if(i==0){
+                    System.out.print("Didn't vote : ");
+                    System.out.println(rs.getInt("vote"));
+                } else {
+                    System.out.print("Voted for "+i+" : ");
+                    System.out.println(rs.getInt("vote"));
+                }
+
             }
-            return votes;
         } catch (SQLException e) {
             System.out.println(e.toString());
         } finally {
@@ -112,7 +114,6 @@ public class Elections {
             }
 
         }
-    return votes;
     }
 
 }
