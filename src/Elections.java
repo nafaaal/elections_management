@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 
 public class Elections {
@@ -84,6 +85,34 @@ public class Elections {
 
         }
         return -1;
+    }
+
+    public static ArrayList<int[]> statistics() {
+        ArrayList<int[]> votes = new ArrayList<int[]>();
+        Connection con = DbConnection.connect();
+        ResultSet rs  =  null;
+        try {
+            Statement stmt  = con.createStatement();
+            String sql = "SELECT voted_for, COUNT(*) AS `num` FROM voters_list GROUP BY voted_for";
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                int[] tempArray = new int[2];
+                tempArray[0] = rs.getInt("voted_for");
+                tempArray[1] = rs.getInt("num");
+                votes.add(tempArray);
+            }
+            return votes;
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+
+        }
+    return votes;
     }
 
 }
