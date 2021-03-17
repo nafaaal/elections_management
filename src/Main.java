@@ -68,33 +68,33 @@ public class Main {
     }
 
     public static void main(String[] args) {
-
-        System.out.println("WELCOME TO VOTING 2021");
-        System.out.println("=======================");
-        Scanner scanner = new Scanner(System.in);
-        int process;
-        while (true) {
-            System.out.println("\n-1. Exit");
-            System.out.println("1. Elections Admin");
-            System.out.println("2. Voting");
-            System.out.print("Enter process number: ");
-            try {
-                process = scanner.nextInt();
-                System.out.print("\n");
-                if (process == -1) break;
-            } catch (Exception e) {
-                System.out.println("Enter Valid number");
-                break;
-            }
-            if (process == 1) {
-                admin();
-            } else if (process == 2) {
-                System.out.println(voting());
-            } else {
-                System.out.println("Enter valid process");
-            }
-        }
-        scanner.close();
+        Elections.candidates_list();
+//        System.out.println("WELCOME TO VOTING 2021");
+//        System.out.println("=======================");
+//        Scanner scanner = new Scanner(System.in);
+//        int process;
+//        while (true) {
+//            System.out.println("\n-1. Exit");
+//            System.out.println("1. Elections Admin");
+//            System.out.println("2. Voting");
+//            System.out.print("Enter process number: ");
+//            try {
+//                process = scanner.nextInt();
+//                System.out.print("\n");
+//                if (process == -1) break;
+//            } catch (Exception e) {
+//                System.out.println("Enter Valid number");
+//                break;
+//            }
+//            if (process == 1) {
+//                admin();
+//            } else if (process == 2) {
+//                System.out.println(voting());
+//            } else {
+//                System.out.println("Enter valid process");
+//            }
+//        }
+//        scanner.close();
 //
     }
 }

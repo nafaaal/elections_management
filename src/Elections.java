@@ -47,13 +47,13 @@ public class Elections {
             String sql = "SELECT * FROM candidate_list";
             rs = stmt.executeQuery(sql);
             System.out.println("CANDIDATES LIST : ");
+            System.out.printf("%-18s %-20s %-18s %-11s %15s\n", "Candidate #", "Name", "Island", "Address", "Party");
             while (rs.next()) {
-                System.out.println(
-                        rs.getString("name") + "\t" +
-                        rs.getString("island")+ "\t" +
-                        rs.getString("address")+ "\t" +
-                        rs.getInt("candidate_number")+ "\t" +
-                        rs.getString("party"));
+                System.out.printf("%-18s", rs.getInt("candidate_number"));
+                System.out.printf("%-20s", rs.getString("name"));
+                System.out.printf("%-20s", rs.getString("island"));
+                System.out.printf("%-20s", rs.getString("address"));
+                System.out.printf("%5s", rs.getString("party")+"\n");
             }
         } catch (SQLException e) {
             System.out.println(e.toString());
@@ -76,14 +76,14 @@ public class Elections {
             String sql = "SELECT * FROM voters_list";
             rs = stmt.executeQuery(sql);
             System.out.println("VOTERS LIST : ");
+            System.out.printf("%-18s %-20s %-18s %-11s %5s %15s\n", "Name", "Island", "Address", "ID Card", "Voted?", "Voted_for");
             while (rs.next()) {
-                System.out.println(
-                        rs.getString("name") + "\t" +
-                        rs.getString("island")+ "\t" +
-                        rs.getString("address")+ "\t" +
-                        rs.getString("id_no")+ "\t" +
-                        rs.getInt("has_voted")+ "\t" +
-                        rs.getInt("voted_for"));
+                System.out.printf("%-20s", rs.getString("name"));
+                System.out.printf("%-20s", rs.getString("island"));
+                System.out.printf("%-20s", rs.getString("address"));
+                System.out.printf("%-10s", rs.getString("id_no"));
+                System.out.printf("%5s", rs.getInt("has_voted"));
+                System.out.printf("%15s", rs.getInt("voted_for")+"\n");
             }
         } catch (SQLException e) {
             System.out.println(e.toString());
