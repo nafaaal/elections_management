@@ -1,8 +1,10 @@
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 
 public class Elections {
 
@@ -61,4 +63,27 @@ public class Elections {
 
         }
     }
+
+
+    public static int has_voted(String id_card) {
+        Connection con = DbConnection.connect();
+        ResultSet rs  =  null;
+        try {
+            Statement stmt  = con.createStatement();
+            String sql = "SELECT * FROM voters_list WHERE id_no='"+id_card+"'";
+            rs = stmt.executeQuery(sql);
+            return rs.getInt("has_voted");
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+
+        }
+        return -1;
+    }
+
 }
