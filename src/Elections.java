@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+//NEED TO GET CANDIDATES
+//NEED TO SHOW CANDIDATES CORRECTLY
 
 public class Elections {
 
@@ -64,7 +66,7 @@ public class Elections {
     }
 
 
-    public static int has_voted(String id_card) {
+    public static int eligible_check(String id_card) {
         Connection con = DbConnection.connect();
         ResultSet rs  =  null;
         try {
@@ -88,8 +90,6 @@ public class Elections {
     }
 
     public static String vote(String id_card, int vote) {
-        if (has_voted(id_card) == 1) return "Already voted";
-        if (has_voted(id_card) == -1) return "Person not registered to vote";
         PreparedStatement ps = null;
         Connection con = DbConnection.connect();
         try {
@@ -116,6 +116,7 @@ public class Elections {
         ResultSet rs  =  null;
         try {
             Statement stmt  = con.createStatement();
+            //IDEALLY GET COUNT FROM DB
             for (int i=0; i<4; i++){
                 String sql = "SELECT COUNT(voted_for) as vote FROM voters_list WHERE voted_for="+i;
                 rs = stmt.executeQuery(sql);
