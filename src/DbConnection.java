@@ -7,7 +7,7 @@ public class DbConnection {
         Connection con = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            con = DriverManager.getConnection("jdbc:sqlite:/Users/nafaal/Projects/shunan-coursework/coursework.db");
+            con = DriverManager.getConnection("jdbc:sqlite:/Users/nafaal/Projects/java-elections/coursework.db");
         } catch ( ClassNotFoundException | SQLException | NullPointerException e ) {
             System.out.println(e+"");
         }
