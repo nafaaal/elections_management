@@ -19,12 +19,15 @@ public class Main {
     public static void admin() {
         while (true) {
             int process;
-            System.out.println("\n-1. Exit");
-            System.out.println("1. Print Candidates");
-            System.out.println("2. Print Voters");
-            System.out.println("3. Add Voter to list");
-            System.out.println("4. View election result.");
+            System.out.println("\nAdmin Panel");
+            System.out.println("--------------------------");
+            System.out.println("-1. Return to main menu");
+            System.out.println(" 1. Print Candidates");
+            System.out.println(" 2. Print Voters");
+            System.out.println(" 3. Add Voter to list");
+            System.out.println(" 4. View election result.");
             System.out.print("Enter process number: ");
+
             Scanner scanner = new Scanner(System.in);
             try {
                 process = scanner.nextInt();
@@ -34,17 +37,13 @@ public class Main {
                 System.out.println("Enter Valid number");
                 break;
             }
-            if (process == 1) {
-                Elections.candidates_list();
-            } else if (process == 2) {
-                Elections.voter_list();
-            } else if (process == 3){
-                enter_voter();
-            } else if (process == 4){
-                Elections.statistics();
-            } else {
-                System.out.println("Enter valid process");
-            }
+
+            if (process == 1) Elections.candidates_list();
+            else if (process == 2) Elections.voter_list();
+            else if (process == 3) enter_voter();
+            else if (process == 4)Elections.statistics();
+            else System.out.println("Enter valid process");
+
         }
     }
 
@@ -73,9 +72,11 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         int process;
         while (true) {
-            System.out.println("\n-1. Exit");
-            System.out.println("1. Elections Admin");
-            System.out.println("2. Voting");
+            System.out.println("\nMain Menu");
+            System.out.println("--------------------------");
+            System.out.println("-1. Exit program.");
+            System.out.println(" 1. Elections Admin");
+            System.out.println(" 2. Voting");
             System.out.print("Enter process number: ");
             try {
                 process = scanner.nextInt();

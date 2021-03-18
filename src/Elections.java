@@ -6,10 +6,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 //NEED TO GET CANDIDATES
-//NEED TO SHOW CANDIDATES CORRECTLY
-//SOUT LISTS CORRECTLY SPACED
-//MAKE SURE NO ONE CAN BAATHIL VOTE
-
 public class Elections {
 
     public static void insert(String name, String island, String address, String id_no) {
@@ -76,9 +72,9 @@ public class Elections {
             String sql = "SELECT * FROM voters_list";
             rs = stmt.executeQuery(sql);
             System.out.println("VOTERS LIST : ");
-            System.out.printf("%-18s %-20s %-18s %-11s %5s %15s\n", "Name", "Island", "Address", "ID Card", "Voted?", "Voted_for");
+            System.out.printf("%-28s %-20s %-18s %-11s %5s %15s\n", "Name", "Island", "Address", "ID Card", "Voted?", "Voted_for");
             while (rs.next()) {
-                System.out.printf("%-20s", rs.getString("name"));
+                System.out.printf("%-29s", rs.getString("name"));
                 System.out.printf("%-20s", rs.getString("island"));
                 System.out.printf("%-20s", rs.getString("address"));
                 System.out.printf("%-10s", rs.getString("id_no"));
@@ -123,6 +119,31 @@ public class Elections {
         return candidates;
     }
 
+    public static ArrayList<String> candidate_names(){
+        ArrayList<String> candidates = new ArrayList<String>();
+        ResultSet rs  =  null;
+        Connection con = DbConnection.connect();
+        try {
+            String sql = "SELECT name FROM candidate_list;";
+            Statement stmt  = con.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                candidates.add(rs.getString("name"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.out.println(e.toString());
+            }
+
+        }
+        return candidates;
+    }
+
 
 
     public static int eligible_check(String id_card) {
@@ -145,7 +166,6 @@ public class Elections {
             }
 
         }
-//        return -1;
     }
 
     public static String vote(String id_card, int vote) {
@@ -173,6 +193,8 @@ public class Elections {
     public static void statistics() {
         Connection con = DbConnection.connect();
         ResultSet rs  =  null;
+        ArrayList<String> candidates = candidate_names();
+        int max = 0;
         try {
             Statement stmt  = con.createStatement();
             //IDEALLY GET COUNT FROM DB
@@ -180,12 +202,13 @@ public class Elections {
             for (int i=0; i<4; i++){
                 String sql = "SELECT COUNT(voted_for) as vote FROM voters_list WHERE voted_for="+i;
                 rs = stmt.executeQuery(sql);
+                int vote_amount = rs.getInt("vote");
                 if(i==0){
                     System.out.print("Didn't vote : ");
-                    System.out.println(rs.getInt("vote"));
+                    System.out.println(vote_amount);
                 } else {
-                    System.out.print("Voted for "+i+" : ");
-                    System.out.println(rs.getInt("vote"));
+                    System.out.print("Candidate Number "+i+ " - " +candidates.get(i-1)+ " : ");
+                    System.out.println(vote_amount);
                 }
 
             }
