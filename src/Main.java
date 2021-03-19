@@ -34,7 +34,7 @@ public class Main {
                 System.out.print("\n");
                 if (process == -1) break;
             } catch (Exception e) {
-                System.out.println("Enter Valid number");
+                System.out.println("Enter valid process");
                 break;
             }
 
@@ -83,18 +83,13 @@ public class Main {
                 System.out.print("\n");
                 if (process == -1) break;
             } catch (Exception e) {
-                System.out.println("Enter Valid number");
+                System.out.println("Enter valid process");
                 break;
             }
-            if (process == 1) {
-                admin();
-            } else if (process == 2) {
-                System.out.println(voting());
-            } else {
-                System.out.println("Enter valid process");
-            }
+            if (process == 1) admin();
+            else if (process == 2) System.out.println(voting());
+            else System.out.println("Enter valid process");
         }
         scanner.close();
-
     }
 }
