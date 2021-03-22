@@ -12,14 +12,11 @@ public class Main {
         System.out.print("Enter address: ");
         String address = scanner.nextLine();
         System.out.print("Enter ID number: ");
+        String id_number;
         while(true){
-            String id_number = scanner.nextLine();
-            if (id_number.matches("[A]{1}\\d{6}")){
-                break;
-            }
-            else {
-                System.out.printf("ID Card format invalid.\nEnter ID Number : ");
-            }
+            id_number = scanner.nextLine();
+            if (id_number.matches("[A]{1}\\d{6}")) break;
+            else System.out.print("ID Card format invalid.\nEnter ID Number : ");
         }
         Elections.insert(name, island, address, id_number);
     }
