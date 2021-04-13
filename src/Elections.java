@@ -1,171 +1,59 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+package election;
+
+import java.sql.*;
 import java.util.ArrayList;
 
 //NEED TO GET CANDIDATES
-public class Elections {
+public abstract class Elections {
 
-    public static void insert(String name, String island, String address, String id_no) {
-        Connection con = DbConnection.connect();
-        PreparedStatement ps = null;
-        try {
-            String sql = "INSERT INTO voters_list(name, island, address, id_no, has_voted, voted_for) VALUES(?,?,?,?,?,?)";
-            ps = con.prepareStatement(sql);
-            ps.setString(1, name);
-            ps.setString(2, island);
-            ps.setString(3, address);
-            ps.setString(4, id_no);
-            ps.setInt(5, 0);
-            ps.setInt(6, 0);
-            ps.execute();
-            System.out.println("Data has been inserted!");
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        } finally {
-            try {
-                ps.close();
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.toString());
-            }
-
+    public static void voter_list() {
+        ArrayList<Voter> voters = new ArrayList<>(Voter.get_all_voters());
+        System.out.println("VOTERS LIST : \n");
+        System.out.printf("%-28s %-19s %-19s %5s \n", "Name", "Island", "Address", "ID Card");
+        System.out.println("----------------------------------------------------------------------------");
+        for (Voter v : voters) {
+            System.out.printf("%-29s", v.name);
+            System.out.printf("%-20s", v.island);
+            System.out.printf("%-20s", v.address);
+            System.out.printf("%5s", v.id_card + "\n");
         }
     }
 
     public static void candidates_list() {
-        Connection con = DbConnection.connect();
-        ResultSet rs  =  null;
-        try {
-            Statement stmt  = con.createStatement();
-            String sql = "SELECT * FROM candidate_list";
-            rs = stmt.executeQuery(sql);
-            System.out.println("CANDIDATES LIST : ");
+            ArrayList<Candidate> candidates = new ArrayList<>(Candidate.get_all_candidates());
+            System.out.println("CANDIDATES LIST : \n");
             System.out.printf("%-18s %-20s %-18s %-11s %15s\n", "Candidate #", "Name", "Island", "Address", "Party");
-            while (rs.next()) {
-                System.out.printf("%-18s", rs.getInt("candidate_number"));
-                System.out.printf("%-20s", rs.getString("name"));
-                System.out.printf("%-20s", rs.getString("island"));
-                System.out.printf("%-20s", rs.getString("address"));
-                System.out.printf("%5s", rs.getString("party")+"\n");
+            System.out.println("---------------------------------------------------------------------------------------");
+            for (Candidate c : candidates) {
+                System.out.printf("%-18s", c.candidate_number);
+                System.out.printf("%-20s", c.name);
+                System.out.printf("%-20s", c.island);
+                System.out.printf("%-20s", c.address);
+                System.out.printf("%5s", c.party+ "\n");
             }
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        } finally {
-            try {
-                rs.close();
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.toString());
-            }
-
-        }
-    }
-
-    public static void voter_list() {
-        Connection con = DbConnection.connect();
-        ResultSet rs  =  null;
-        try {
-            Statement stmt  = con.createStatement();
-            String sql = "SELECT * FROM voters_list";
-            rs = stmt.executeQuery(sql);
-            System.out.println("VOTERS LIST : ");
-            System.out.printf("%-28s %-20s %-18s %-11s %5s %15s\n", "Name", "Island", "Address", "ID Card", "Voted?", "Voted_for");
-            while (rs.next()) {
-                System.out.printf("%-29s", rs.getString("name"));
-                System.out.printf("%-20s", rs.getString("island"));
-                System.out.printf("%-20s", rs.getString("address"));
-                System.out.printf("%-10s", rs.getString("id_no"));
-                System.out.printf("%5s", rs.getInt("has_voted"));
-                System.out.printf("%15s", rs.getInt("voted_for")+"\n");
-            }
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        } finally {
-            try {
-                rs.close();
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.toString());
-            }
-
-        }
     }
 
     public static ArrayList<Integer> candidate_numbers(){
-        ArrayList<Integer> candidates = new ArrayList<Integer>();
-        ResultSet rs  =  null;
-        Connection con = DbConnection.connect();
-        try {
-            String sql = "SELECT DISTINCT candidate_number FROM candidate_list;";
-            Statement stmt  = con.createStatement();
-            rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                candidates.add(rs.getInt("candidate_number"));
-            }
-
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.toString());
-            }
-
+        ArrayList<Candidate> candidates = new ArrayList<>(Candidate.get_all_candidates());
+        ArrayList<Integer> candidate_no = new ArrayList<>();
+        for (Candidate c : candidates){
+            candidate_no.add(c.candidate_number);
         }
-        return candidates;
+        return candidate_no;
     }
 
-    public static ArrayList<String> candidate_names(){
-        ArrayList<String> candidates = new ArrayList<String>();
-        ResultSet rs  =  null;
-        Connection con = DbConnection.connect();
-        try {
-            String sql = "SELECT name FROM candidate_list;";
-            Statement stmt  = con.createStatement();
-            rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                candidates.add(rs.getString("name"));
-            }
-
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.toString());
-            }
-
-        }
-        return candidates;
-    }
-
-
-
+    //need to test
     public static int eligible_check(String id_card) {
-        Connection con = DbConnection.connect();
-        ResultSet rs  =  null;
-        try {
-            Statement stmt  = con.createStatement();
-            String sql = "SELECT * FROM voters_list WHERE id_no='"+id_card+"'";
-            rs = stmt.executeQuery(sql);
-            return rs.getInt("has_voted");
-        } catch (SQLException e) {
-            return -1;
-//            System.out.println(e.toString());
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                return -1;
-//                System.out.println(e.toString());
+        ArrayList<Voter> voters = new ArrayList<>(Voter.get_all_voters());
+        int res = 0;
+        for (Voter v : voters){
+            if (v.id_card.equals(id_card)) {
+                res = 1;
+                break;
             }
-
         }
+        return res;
     }
 
     public static String vote(String id_card, int vote) {
@@ -175,6 +63,7 @@ public class Elections {
             String sql = "UPDATE voters_list SET has_voted=1, voted_for="+vote+" WHERE id_no='"+id_card+"'";
             ps = con.prepareStatement(sql);
             ps.execute();
+            System.out.println("");
             return "Successfully Voted.";
         } catch (SQLException e) {
             System.out.println(e.toString());
@@ -189,39 +78,62 @@ public class Elections {
     return "Error";
     }
 
-
-    public static void statistics() {
+    public static void insert(Voter voter) {
         Connection con = DbConnection.connect();
-        ResultSet rs  =  null;
-        ArrayList<String> candidates = candidate_names();
-        int max = 0;
+        PreparedStatement ps = null;
         try {
-            Statement stmt  = con.createStatement();
-            //IDEALLY GET COUNT FROM DB
-            System.out.println("VOTING RESULTS: ");
-            for (int i=0; i<4; i++){
-                String sql = "SELECT COUNT(voted_for) as vote FROM voters_list WHERE voted_for="+i;
-                rs = stmt.executeQuery(sql);
-                int vote_amount = rs.getInt("vote");
-                if(i==0){
-                    System.out.print("Didn't vote : ");
-                    System.out.println(vote_amount);
-                } else {
-                    System.out.print("Candidate Number "+i+ " - " +candidates.get(i-1)+ " : ");
-                    System.out.println(vote_amount);
-                }
-
-            }
+            String sql = "INSERT INTO voters_list(name, island, address, id_no, has_voted, voted_for) VALUES(?,?,?,?,?,?)";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, voter.name);
+            ps.setString(2, voter.island);
+            ps.setString(3, voter.address);
+            ps.setString(4, voter.id_card);
+            ps.setInt(5, 0);
+            ps.setInt(6, 0);
+            ps.execute();
+            System.out.println("\nVoter has been added.");
         } catch (SQLException e) {
             System.out.println(e.toString());
         } finally {
             try {
+                assert ps != null;
+                ps.close();
                 con.close();
             } catch (SQLException e) {
                 System.out.println(e.toString());
             }
 
         }
+    }
+
+    public static void statistics() {
+        ArrayList<Voter> voters = new ArrayList<>(Voter.get_all_voters());
+        ArrayList<Candidate> allcandidates = new ArrayList<>(Candidate.get_all_candidates());
+        ArrayList<Integer> votes = new ArrayList<>(allcandidates.size());
+        int count = 1;
+        int max = 0;
+        String winner = "";
+        int no_vote = voters.size();
+        for (Candidate cand : allcandidates){
+            int numberOfVotes = 0;
+            for (Voter v : voters){
+                if (v.voted_for == cand.candidate_number){
+                    numberOfVotes += 1;
+                }
+            }
+            if (numberOfVotes > max) {
+                max = numberOfVotes;
+                winner = cand.name;
+            }
+            votes.add(numberOfVotes);
+            no_vote -= numberOfVotes;
+        }
+        System.out.println("Haven't voted : " + no_vote);
+        for (Candidate can : allcandidates){
+            System.out.println("#"+ count + " - " + can.name + " - " + votes.get(count-1) + " votes.");
+            count++;
+        }
+        System.out.println("Winner is "+ winner);
     }
 
 }

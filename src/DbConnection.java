@@ -1,3 +1,6 @@
+
+package election;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,7 +10,7 @@ public class DbConnection {
         Connection con = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            con = DriverManager.getConnection("jdbc:sqlite:/Users/nafaal/Projects/java-elections/coursework.db");
+            con = DriverManager.getConnection("jdbc:sqlite:coursework.db");
         } catch ( ClassNotFoundException | SQLException | NullPointerException e ) {
             System.out.println(e+"");
         }
