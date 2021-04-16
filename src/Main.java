@@ -85,14 +85,13 @@ public class Main {
             System.out.println("");
             System.out.print("Enter Candidate Number : ");
 
-            while (true) {
 
-                try {
-                    vote = scanner.nextInt();
-                } catch (Exception e) {
-                    break;
-                }
+            try {
+                vote = Integer.parseInt(scanner.nextLine());
+            } catch (Exception e) {
+                return "Candidate invalid";
             }
+
 
         }
 

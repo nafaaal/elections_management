@@ -43,14 +43,16 @@ public abstract class Elections {
         return candidate_no;
     }
 
-    //need to test
     public static int eligible_check(String id_card) {
         ArrayList<Voter> voters = new ArrayList<>(Voter.get_all_voters());
-        int res = 0;
+        int res = -1;
         for (Voter v : voters){
-            if (v.id_card.equals(id_card)) {
-                res = 1;
-                break;
+            String id = v.id_card;
+            if (id.equals(id_card)) {
+                if (v.has_voted == 1) {
+                    return 1;
+                }
+                else return 0;
             }
         }
         return res;
