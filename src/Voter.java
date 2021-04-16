@@ -20,8 +20,14 @@ public class Voter extends Person{
         this.voted_for = voted_for;
     }
 
-    public static ArrayList<Voter> get_all_voters(){
-        ArrayList<Voter> voters = new ArrayList<>();
+    //Default constructor
+    Voter(){
+        this("test", "test", "test", "test", 1,1);
+    }
+
+    @Override
+    public ArrayList<Person> get_data(){
+        ArrayList<Person> voters = new ArrayList<>();
         ResultSet rs  =  null;
         Connection con = DbConnection.connect();
         try {
@@ -29,7 +35,7 @@ public class Voter extends Person{
             Statement stmt  = con.createStatement();
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                Voter voter = new Voter(
+                Person voter = new Voter(
                         rs.getString("name"),
                         rs.getString("island"),
                         rs.getString("address"),
@@ -50,5 +56,19 @@ public class Voter extends Person{
 
         }
         return voters;
+    }
+
+    @Override
+    public void print_data() {
+        ArrayList<Person> voters = get_data();
+        System.out.println("VOTERS LIST : \n");
+        System.out.printf("%-28s %-19s %-19s %5s \n", "Name", "Island", "Address", "ID Card");
+        System.out.println("----------------------------------------------------------------------------");
+        for (Person v : voters) {
+            System.out.printf("%-29s", v.name);
+            System.out.printf("%-20s", v.island);
+            System.out.printf("%-20s", v.address);
+            System.out.printf("%5s", ((Voter)v).id_card+  "\n");
+        }
     }
 }

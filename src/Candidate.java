@@ -18,8 +18,14 @@ public class Candidate extends Person{
         this.party = party;
     }
 
-    public static ArrayList<Candidate> get_all_candidates(){
-        ArrayList<Candidate> candidates = new ArrayList<>();
+    //default
+    Candidate(){
+        this("test","test","test",-1,"test");
+    }
+
+    @Override
+    public ArrayList<Person> get_data(){
+        ArrayList<Person> candidates = new ArrayList<>();
         ResultSet rs  =  null;
         Connection con = DbConnection.connect();
         try {
@@ -27,7 +33,7 @@ public class Candidate extends Person{
             Statement stmt  = con.createStatement();
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                Candidate candidate = new Candidate(
+                Person candidate = new Candidate(
                         rs.getString("name"),
                         rs.getString("island"),
                         rs.getString("address"),
@@ -48,5 +54,20 @@ public class Candidate extends Person{
 
         }
         return candidates;
+    }
+
+    @Override
+    public void print_data() {
+        ArrayList<Person> candidates = get_data();
+        System.out.println("CANDIDATES LIST : \n");
+        System.out.printf("%-18s %-20s %-18s %-11s %15s\n", "Candidate #", "Name", "Island", "Address", "Party");
+        System.out.println("---------------------------------------------------------------------------------------");
+        for (Person c : candidates) {
+            System.out.printf("%-18s", ((Candidate)c).candidate_number);
+            System.out.printf("%-20s", c.name);
+            System.out.printf("%-20s", c.island);
+            System.out.printf("%-20s", c.address);
+            System.out.printf("%5s", ((Candidate)c).party+ "\n");
+        }
     }
 }
