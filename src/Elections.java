@@ -10,12 +10,13 @@ public class Elections {
 
     Voter voter = new Voter();
     Candidate candidate = new Candidate();
+    DbConnection db_connection = new DbConnection();
 
     private ArrayList<Person> voters = voter.get_data();
     private ArrayList<Person> candidates = candidate.get_data();
 
     private void insert(Voter voter) {
-        Connection con = DbConnection.connect();
+        Connection con = db_connection.connect();
         PreparedStatement ps = null;
         try {
             String sql = "INSERT INTO voters_list(name, island, address, id_no, has_voted, voted_for) VALUES(?,?,?,?,?,?)";
@@ -157,7 +158,7 @@ public class Elections {
 
     private void vote(String id_card, int vote) {
         PreparedStatement ps = null;
-        Connection con = DbConnection.connect();
+        Connection con = db_connection.connect();
         try {
             String sql = "UPDATE voters_list SET has_voted=1, voted_for="+vote+" WHERE id_no='"+id_card+"'";
             ps = con.prepareStatement(sql);
