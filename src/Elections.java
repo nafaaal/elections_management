@@ -112,6 +112,8 @@ public class Elections {
         int max = 0;
         String winner = "";
         int no_vote = voters.size();
+        int voted = no_vote;
+        System.out.println("Total Voters : " + no_vote);
         for (Person cand : candidates){
             int numberOfVotes = 0;
             for (Person v : voters){
@@ -126,6 +128,8 @@ public class Elections {
             votes.add(numberOfVotes);
             no_vote -= numberOfVotes;
         }
+        voted = voted - no_vote;
+        System.out.println("Voted : " + voted);
         System.out.println("Haven't voted : " + no_vote);
         for (Person can : candidates){
             System.out.println("#"+ count + " - " + can.name + " - " + votes.get(count-1) + " votes.");
