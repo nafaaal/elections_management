@@ -94,7 +94,7 @@ public class Elections {
             if (process == 1) {
                 candidate.print_data();
             } else if (process == 2) {
-                voter.print_data();
+                voter   .print_data();
             } else if (process == 3) {
                 enter_voter();
             } else if (process == 4) {

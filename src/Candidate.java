@@ -23,11 +23,13 @@ public class Candidate extends Person{
         this("test","test","test",-1,"test");
     }
 
+    DbConnection db_connection = new DbConnection();
+
     @Override
     public ArrayList<Person> get_data(){
         ArrayList<Person> candidates = new ArrayList<>();
         ResultSet rs  =  null;
-        Connection con = DbConnection.connect();
+        Connection con = db_connection.connect();
         try {
             String sql = "SELECT * FROM candidate_list;";
             Statement stmt  = con.createStatement();

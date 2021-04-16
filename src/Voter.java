@@ -25,11 +25,13 @@ public class Voter extends Person{
         this("test", "test", "test", "test", 1,1);
     }
 
+    DbConnection db_connection = new DbConnection();
+
     @Override
     public ArrayList<Person> get_data(){
         ArrayList<Person> voters = new ArrayList<>();
         ResultSet rs  =  null;
-        Connection con = DbConnection.connect();
+        Connection con = db_connection.connect();
         try {
             String sql = "SELECT * FROM voters_list;";
             Statement stmt  = con.createStatement();
